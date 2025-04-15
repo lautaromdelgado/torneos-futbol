@@ -17,7 +17,7 @@ func (h Handler) CreatePlayer(c *gin.Context) {
 	}
 
 	// Consumir un servicio externo
-	insertedID, err := h.Services.CreatePlayerService(playerCreateParams)
+	insertedID, err := h.Services.Create(playerCreateParams)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "oops, something went wrong"})
 		return

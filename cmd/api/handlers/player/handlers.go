@@ -6,6 +6,6 @@ type Handler struct {
 	Services ports.PlayerService
 }
 
-func NewHandler(port ports.PlayerService) *Handler {
-	return &Handler{Services: port}
+func NewHandler(services ports.PlayerService) *Handler {
+	return &Handler{Services: services}
 }

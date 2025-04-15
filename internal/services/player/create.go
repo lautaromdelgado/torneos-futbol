@@ -1,37 +1,24 @@
 package services
 
 import (
-	"context"
+	"fmt"
 	"log"
-	"os"
 	"time"
 
 	domain "github.com/lautaromdelgado/torneos-futbol/internal/domain"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreatePlayerService(player domain.Player) (id interface{}, err error) {
+func (s Services) Create(player domain.Player) (id interface{}, err error) {
+	// Lógica de negocio
+	// Guardar en el repositorio
+	// Responder con el identificador del nuevo recurso creado
 	player.CreationTime = time.Now().UTC()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGODB_URI")))
+	InsertedID, err := s.Repo.Insert(player)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err.Error())
+		return nil, fmt.Errorf("error creating player: %w", err)
 	}
 
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	collection := client.Database("go-l").Collection("players")
-	insertResult, err := collection.InsertOne(ctx, player)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return insertResult.InsertedID, nil
+	return InsertedID, nil
 }
